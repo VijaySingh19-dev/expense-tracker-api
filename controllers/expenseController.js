@@ -1,4 +1,5 @@
 import { Expense } from "../models/expense.js";
+import { paginated } from "../utils/pagination.js";
 
 
 //1. Fucntion to add a new expense
@@ -51,34 +52,31 @@ export const addExpense = async (req, res) => {
 
 //2. FUnction to list all the expenses
 export const listExpense = async (req, res) => {
-    try{
 
-        const userList = await Expense.find({
-            userId: req.user.id
+    try {
+
+        const page =
+            parseInt(req.query.page) || 1;
+
+        const limit =
+            parseInt(req.query.limit) || 5;
+
+        const data = await paginate(
+            Expense,
+            { userId: req.user.id },
+            page,
+            limit
+        );
+
+        return res.status(200).json(data);
+
+    } catch(error){
+
+        return res.status(500).json({
+            message: error.message
         });
-
-         if(userList.length === 0){
-            return res.status(404).json({
-                message: "No expenses found"
-            });
-        }
-
-        return res.status(200).json({
-        count: userList.length,
-        expenses: userList
-        })
     }
-    catch(error){
-    console.error(error);
-
-    return res.status(500).json({
-        message: error.message
-    });
-}  
 };
-
-
-
 
 //3. Function to update the expense
 
@@ -472,6 +470,3 @@ export const categorySummary = async(req,res) => {
 };
 
     
-
-
-

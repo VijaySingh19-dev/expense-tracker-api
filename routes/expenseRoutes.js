@@ -13,11 +13,15 @@ import {
 
 } from '../controllers/expenseController.js'
 
+
 import authenticateToken from '../middleware/authenticateToken.js'
+
+
+
 
 router.post('/add' ,authenticateToken , addExpense);
 
-router.get('/list'  ,authenticateToken , listExpense);
+router.get('/list'  ,authenticateToken  , listExpense);
 
 router.get('/filter',authenticateToken, filterExpensesByTime);
 
