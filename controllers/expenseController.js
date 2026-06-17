@@ -1,6 +1,4 @@
 import { Expense } from "../models/expense.js";
-import { paginated } from "../utils/pagination.js";
-
 
 //1. Fucntion to add a new expense
 export const addExpense = async (req, res) => {
@@ -61,22 +59,65 @@ export const listExpense = async (req, res) => {
         const limit =
             parseInt(req.query.limit) || 5;
 
-        const data = await paginate(
-            Expense,
-            { userId: req.user.id },
+        const skip =
+            (page - 1) * limit;
+
+        const totalDocuments =
+            await Expense.countDocuments({
+                userId: req.user.id
+            });
+
+        const expenses =
+            await Expense.find({
+                userId: req.user.id
+            })
+            .sort({ createdAt: -1 })
+            .skip(skip)
+            .limit(limit);
+
+        if (expenses.length === 0) {
+            return res.status(404).json({
+                message: "No expenses found"
+            });
+        }
+
+        const totalPages =
+            Math.ceil(totalDocuments / limit);
+
+        const response = {
             page,
-            limit
-        );
+            limit,
+            totalDocuments,
+            totalPages,
+            expenses
+        };
 
-        return res.status(200).json(data);
+        if (page > 1) {
+            response.prev = {
+                page: page - 1,
+                limit
+            };
+        }
 
-    } catch(error){
+        if (page < totalPages) {
+            response.next = {
+                page: page + 1,
+                limit
+            };
+        }
+
+        return res.status(200).json(response);
+
+    } catch (error) {
+
+        console.error(error);
 
         return res.status(500).json({
             message: error.message
         });
     }
 };
+
 
 //3. Function to update the expense
 
