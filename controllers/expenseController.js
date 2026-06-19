@@ -48,6 +48,23 @@ export const addExpense = async (req, res) => {
 
 
 
+//helper function to validate sort as a query parameter
+
+function validateSort(sort) {
+
+    const allowedSorts = [
+        "amount",
+        "-amount",
+        "title",
+        "-title",
+        "createdAt",
+        "-createdAt"
+    ];
+
+    return allowedSorts.includes(sort);
+}          
+
+
 //2. FUnction to list all the expenses
 export const listExpense = async (req, res) => {
 
@@ -59,8 +76,16 @@ export const listExpense = async (req, res) => {
         const limit =
             parseInt(req.query.limit) || 5;
 
+        const {sort} = 
+            req.query;
+
         const skip =
             (page - 1) * limit;
+        
+        if(sort && !validateSort(sort)) {
+                res.status(400).json({message :"Please provide a valid sorting parameter"})
+                return
+            }
 
         const totalDocuments =
             await Expense.countDocuments({
@@ -71,9 +96,10 @@ export const listExpense = async (req, res) => {
             await Expense.find({
                 userId: req.user.id
             })
-            .sort({ createdAt: -1 })
+            .sort(sort)
             .skip(skip)
-            .limit(limit);
+            .limit(limit)
+            .populate("userId", "username email");;
 
         if (expenses.length === 0) {
             return res.status(404).json({
@@ -249,21 +275,30 @@ export const filterByCat = async(req, res) => {
     try{
 
         const {category} = req.params
+        const {sort} = req.query;
+            
 
         if(!category || category.trim() == ""){
             res.status(400).json({message : "Please provide a valid category for the expense"})
             return
-        }
+            }
+
+        if(sort && !validateSort(sort)) {
+                res.status(400).json({message :"Please provide a valid sorting parameter"})
+                return
+            }
         
         const filteredCategory = await Expense.find({
             userId: req.user.id,
             category: {
                 $regex: new RegExp(`^${category}$`, "i") // i : case-insensitive i.e food = Food
             }
-        });
+        }).sort(sort)
+          .populate("userId" , "name email");
 
         if(filteredCategory.length === 0){
             res.status(404).json({message : "Specified category not found"})
+            return
         }
 
         res.status(200).json({

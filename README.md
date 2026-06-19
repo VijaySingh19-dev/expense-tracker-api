@@ -6,6 +6,8 @@ A RESTful API built using Node.js, Express.js, MongoDB Atlas, and JWT Authentica
 
 # 🚀 Features
 
+# 🚀 Features
+
 - 👤 User Registration
 - 🔐 User Login
 - 🛡 JWT Authentication
@@ -17,6 +19,9 @@ A RESTful API built using Node.js, Express.js, MongoDB Atlas, and JWT Authentica
 - 📅 Filter Expenses By Time
 - 📊 Expense Summary
 - 📈 Category Summary
+- 📄 Pagination
+- ↕️ Dynamic Sorting
+- 🔗 MongoDB Populate
 
 ---
 
@@ -140,6 +145,36 @@ GET /api/expense/filter?period=custom&from=2026-01-01&to=2026-06-01
 
 ---
 
+## Pagination, Sorting & Search
+
+### Pagination
+
+```http
+GET /api/expense/list?page=1&limit=5
+```
+
+### Dynamic Sorting
+
+```http
+GET /api/expense/list?sort=amount
+```
+
+```http
+GET /api/expense/list?sort=-amount
+```
+
+```http
+GET /api/expense/list?sort=-createdAt
+```
+
+### Combined Example
+
+```http
+GET /api/expense/list?page=1&limit=5&sort=-amount
+
+```
+---
+
 ## Summary
 
 | Method | Endpoint |
@@ -161,25 +196,31 @@ Authorization: Bearer <JWT_TOKEN>
 
 # 🧠 Future Improvements
 
+# 🧠 Future Improvements
+
 - PDF Expense Reports
-- Pagination
-- Sorting
 - Budget Tracking
 - Monthly Analytics
 - Frontend Integration (React)
 - Docker Deployment
+- Refresh Tokens
+- Email Verification
+- Password Reset
 
 ---
 
 # 👨‍💻 Author
 
 **Vijay**
-
 Built as a backend-focused project to practice:
 
 - Node.js
 - Express.js
-- MongoDB
+- MongoDB Atlas
 - Mongoose
 - JWT Authentication
 - REST API Design
+- Pagination
+- Dynamic Sorting
+- Search using Regex
+- MongoDB Populate
