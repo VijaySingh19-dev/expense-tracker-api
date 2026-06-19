@@ -195,8 +195,6 @@ Authorization: Bearer <JWT_TOKEN>
 
 # 🧠 Future Improvements
 
-# 🧠 Future Improvements
-
 - PDF Expense Reports
 - Budget Tracking
 - Monthly Analytics
