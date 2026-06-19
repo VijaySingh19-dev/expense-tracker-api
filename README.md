@@ -4,7 +4,6 @@ A RESTful API built using Node.js, Express.js, MongoDB Atlas, and JWT Authentica
 
 ---
 
-# 🚀 Features
 
 # 🚀 Features
 
