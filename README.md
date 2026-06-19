@@ -209,6 +209,8 @@ Authorization: Bearer <JWT_TOKEN>
 # 👨‍💻 Author
 
 **Vijay**
+---
+
 Built as a backend-focused project to practice:
 
 - Node.js
